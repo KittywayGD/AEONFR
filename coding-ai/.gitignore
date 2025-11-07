@@ -42,8 +42,8 @@ logs/
 wandb/
 .tensorboard/
 
-# Data
-data/
+# Data (only root level data folder, not src/data)
+/data/
 *.jsonl
 *.csv
 *.parquet
