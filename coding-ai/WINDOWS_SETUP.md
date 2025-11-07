@@ -28,9 +28,13 @@ Pour utiliser ta RTX 5060Ti, installe CUDA Toolkit :
    nvidia-smi
    ```
 
-2. Télécharge CUDA Toolkit 11.8 ou 12.x depuis [nvidia.com/cuda](https://developer.nvidia.com/cuda-downloads)
+2. **Télécharge CUDA Toolkit** depuis [nvidia.com/cuda](https://developer.nvidia.com/cuda-downloads)
+   - **CUDA 12.x** (Recommandé) : Plus récent, meilleures performances
+   - **CUDA 11.8** : Alternative si problèmes avec 12.x
 
-3. Installe en suivant l'assistant
+3. Installe en suivant l'assistant (laisse les options par défaut)
+
+4. **Redémarre** ton ordinateur après l'installation
 
 ### 3. Visual Studio Build Tools (optionnel mais recommandé)
 
@@ -92,12 +96,20 @@ Certains packages Python nécessitent des outils de compilation :
 
 6. **Vérifie l'installation de PyTorch avec CUDA** :
    ```cmd
-   python -c "import torch; print(f'PyTorch: {torch.__version__}'); print(f'CUDA disponible: {torch.cuda.is_available()}')"
+   python -c "import torch; print(f'PyTorch: {torch.__version__}'); print(f'CUDA disponible: {torch.cuda.is_available()}'); print(f'GPU: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"CPU\"}')"
    ```
 
-   **Si CUDA n'est pas disponible**, réinstalle PyTorch avec CUDA :
+   **Si CUDA n'est pas disponible**, réinstalle PyTorch avec ta version de CUDA :
+
+   **Pour CUDA 12.x ou 13.x** (vérifie avec `nvidia-smi`) :
    ```cmd
-   pip uninstall torch
+   pip uninstall torch torchvision torchaudio
+   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+   ```
+
+   **Pour CUDA 11.8** :
+   ```cmd
+   pip uninstall torch torchvision torchaudio
    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
    ```
 
@@ -252,7 +264,21 @@ pip install -r requirements.txt
 
 ### Erreur : "torch not compiled with CUDA"
 
-**Réinstalle PyTorch avec CUDA** :
+**Vérifie d'abord ta version de CUDA** :
+```cmd
+nvidia-smi
+```
+Regarde la ligne "CUDA Version" en haut à droite.
+
+**Réinstalle PyTorch avec ta version de CUDA** :
+
+Pour CUDA 12.x/13.x :
+```cmd
+pip uninstall torch torchvision torchaudio
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+```
+
+Pour CUDA 11.8 :
 ```cmd
 pip uninstall torch torchvision torchaudio
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118

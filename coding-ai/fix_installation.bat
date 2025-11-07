@@ -31,16 +31,22 @@ pip uninstall -y deepspeed torch 2>nul
 
 REM Install PyTorch with CUDA support
 echo.
-echo Installing PyTorch with CUDA support...
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+echo Installing PyTorch with CUDA 12.x support...
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
 REM Check installation
-python -c "import torch; print(f'PyTorch {torch.__version__} installed'); print(f'CUDA available: {torch.cuda.is_available()}')"
+python -c "import torch; print(f'PyTorch {torch.__version__} installed'); print(f'CUDA available: {torch.cuda.is_available()}')" 2>nul
 if %errorlevel% neq 0 (
     echo.
-    echo ERROR: PyTorch installation failed
-    echo Trying CPU-only version...
-    pip install torch torchvision torchaudio
+    echo WARNING: CUDA 12.x failed, trying CUDA 11.8...
+    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+    python -c "import torch" 2>nul
+    if %errorlevel% neq 0 (
+        echo.
+        echo ERROR: PyTorch installation failed
+        echo Trying CPU-only version...
+        pip install torch torchvision torchaudio
+    )
 )
 
 REM Install remaining dependencies
@@ -58,9 +64,11 @@ python -c "import torch; print(f'\nCUDA available: {torch.cuda.is_available()}')
 
 echo.
 echo If CUDA is still not available:
-echo   1. Verify your NVIDIA drivers are up to date
-echo   2. Install CUDA Toolkit 11.8 from nvidia.com/cuda
+echo   1. Verify your NVIDIA drivers are up to date: nvidia-smi
+echo   2. Verify CUDA Toolkit is installed (12.x or 11.8)
 echo   3. Restart your computer
-echo   4. Run this script again
+echo   4. Reinstall PyTorch manually:
+echo      CUDA 12.x: pip install torch torchvision torchaudio --force-reinstall --index-url https://download.pytorch.org/whl/cu121
+echo      CUDA 11.8: pip install torch torchvision torchaudio --force-reinstall --index-url https://download.pytorch.org/whl/cu118
 echo.
 pause
