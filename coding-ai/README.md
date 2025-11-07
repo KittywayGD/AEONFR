@@ -2,6 +2,8 @@
 
 Un modèle de langage orienté programmation qui s'entraîne de manière récursive et autonome sur GPU RTX 5060Ti.
 
+> **📌 Utilisateur Windows ?** Consulte le guide complet [WINDOWS_SETUP.md](WINDOWS_SETUP.md) pour l'installation et l'utilisation sous Windows.
+
 ## 🎯 Objectif
 
 Ce projet implémente un système d'apprentissage autonome où un modèle de langage :
@@ -65,14 +67,32 @@ coding-ai/
 
 ### Installation des dépendances
 
+#### Linux/Mac
 ```bash
 cd coding-ai
+./quick_start.sh  # Script automatique
+```
 
+#### Windows
+```cmd
+cd coding-ai
+quick_start.bat  # Script automatique
+```
+
+Ou installation manuelle :
+
+```bash
 # Créer un environnement virtuel
 python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# ou
-venv\Scripts\activate  # Windows
+
+# Linux/Mac
+source venv/bin/activate
+
+# Windows (CMD)
+venv\Scripts\activate.bat
+
+# Windows (PowerShell)
+venv\Scripts\Activate.ps1
 
 # Installer les dépendances
 pip install -r requirements.txt
