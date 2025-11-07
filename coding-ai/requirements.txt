@@ -5,7 +5,7 @@ tokenizers>=0.13.0
 
 # Training optimization
 accelerate>=0.20.0
-deepspeed>=0.9.0
+# deepspeed>=0.9.0  # Optional: Uncomment on Linux (difficult to install on Windows)
 
 # Monitoring and logging
 wandb>=0.15.0
@@ -36,6 +36,6 @@ rich>=13.0.0
 # flash-attn>=2.0.0
 
 # Code safety
-docker>=6.0.0
 psutil>=5.9.0
-timeout-decorator>=0.5.0
+# docker - Not needed, use Docker Desktop on Windows if you want Docker sandbox
+# timeout-decorator>=0.5.0  # Not needed on Windows

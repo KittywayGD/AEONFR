@@ -34,14 +34,35 @@ echo.
 echo Upgrading pip...
 python -m pip install --upgrade pip
 
-REM Install dependencies
+REM Install PyTorch first (required for other packages)
 echo.
-echo Installing dependencies...
+echo Installing PyTorch (this may take a few minutes)...
+pip install torch>=2.0.0 --index-url https://download.pytorch.org/whl/cu118
+if %errorlevel% neq 0 (
+    echo WARNING: Failed to install PyTorch with CUDA
+    echo Trying CPU-only version...
+    pip install torch>=2.0.0
+)
+
+REM Check if PyTorch installed successfully
+python -c "import torch" 2>nul
+if %errorlevel% neq 0 (
+    echo ERROR: PyTorch installation failed. Please install manually.
+    echo Visit: https://pytorch.org/get-started/locally/
+    pause
+    exit /b 1
+)
+echo [OK] PyTorch installed
+
+REM Install other dependencies
+echo.
+echo Installing other dependencies...
 echo This may take a few minutes...
+pip install -r requirements.txt --no-deps
 pip install -r requirements.txt
 if %errorlevel% neq 0 (
-    echo WARNING: Some packages failed to install
-    echo You may need to install CUDA toolkit for GPU support
+    echo WARNING: Some optional packages may have failed
+    echo The core functionality should still work
 )
 echo [OK] Dependencies installed
 
@@ -55,24 +76,38 @@ echo [OK] Directories created
 
 REM Check CUDA availability
 echo.
-echo Checking CUDA availability...
-python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}'); print(f'CUDA version: {torch.version.cuda if torch.cuda.is_available() else \"N/A\"}'); print(f'Device name: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"CPU\"}')"
+echo ==========================================
+echo Checking GPU/CUDA availability...
+echo ==========================================
+python -c "import torch; cuda_available = torch.cuda.is_available(); print(f'\nPyTorch version: {torch.__version__}'); print(f'CUDA available: {cuda_available}'); print(f'CUDA version: {torch.version.cuda if cuda_available else \"N/A\"}'); print(f'GPU device: {torch.cuda.get_device_name(0) if cuda_available else \"CPU only\"}'); print(f'GPU memory: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.1f} GB' if cuda_available else '')"
+if %errorlevel% neq 0 (
+    echo WARNING: Could not check CUDA status
+)
 
 echo.
-echo ==================================
+echo ==========================================
 echo Setup complete!
-echo ==================================
+echo ==========================================
 echo.
-echo To start training, run:
-echo   python train.py --config config/training_config.yaml
+echo Quick commands:
 echo.
-echo To resume from checkpoint:
-echo   python train.py --config config/training_config.yaml --resume
+echo   Start training:
+echo     python train.py --config config\training_config.yaml
 echo.
-echo To run tests:
-echo   pytest tests/
+echo   Resume from checkpoint:
+echo     python train.py --resume
 echo.
-echo NOTE: Keep this terminal window open to use the virtual environment
-echo       Or activate it manually with: venv\Scripts\activate.bat
+echo   Generate code (after training):
+echo     python inference.py --model checkpoints\final_model\pytorch_model.bin --tokenizer checkpoints\tokenizer.json
+echo.
+echo   Run tests:
+echo     pytest tests\
+echo.
+echo NOTE: This terminal has the virtual environment activated.
+echo       Next time, activate it with: venv\Scripts\activate.bat
+echo.
+echo If CUDA is not available but you have an NVIDIA GPU:
+echo   1. Install CUDA Toolkit from nvidia.com/cuda
+echo   2. Reinstall PyTorch: pip install torch --force-reinstall --index-url https://download.pytorch.org/whl/cu118
 echo.
 pause
