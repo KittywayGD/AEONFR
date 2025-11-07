@@ -2,6 +2,8 @@
 
 Guide complet pour installer et utiliser le Recursive Code LLM sur Windows.
 
+> ⚠️ **Installation échouée ?** Si `quick_start.bat` a rencontré des erreurs, lance simplement `fix_installation.bat` pour corriger l'installation automatiquement.
+
 ## 📋 Prérequis
 
 ### 1. Python 3.9+
@@ -211,6 +213,34 @@ training:
 ```
 
 ## 🐛 Résolution de Problèmes
+
+### ⚡ Script d'Installation Rapide pour les Erreurs
+
+Si `quick_start.bat` a échoué, lance simplement :
+```cmd
+fix_installation.bat
+```
+
+Ce script va :
+1. Nettoyer les installations échouées
+2. Installer PyTorch correctement (avec CUDA)
+3. Installer le reste des dépendances dans le bon ordre
+
+### Erreur : DeepSpeed installation failed
+
+**C'est normal sur Windows !** DeepSpeed est difficile à installer sur Windows et n'est pas nécessaire pour démarrer.
+
+**Solution** : Le fichier `requirements.txt` a été mis à jour pour rendre DeepSpeed optionnel. Relance simplement :
+```cmd
+fix_installation.bat
+```
+
+Ou manuellement :
+```cmd
+venv\Scripts\activate.bat
+pip uninstall deepspeed
+pip install -r requirements.txt
+```
 
 ### Erreur : "CUDA out of memory"
 
