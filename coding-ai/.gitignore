@@ -1,0 +1,74 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Training artifacts
+checkpoints/
+!checkpoints/.gitkeep
+logs/
+!logs/.gitkeep
+wandb/
+.tensorboard/
+
+# Data (only root level data folder, not src/data)
+/data/
+*.jsonl
+*.csv
+*.parquet
+
+# Model files
+*.pt
+*.bin
+*.safetensors
+*.ckpt
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment
+.env
+.env.local
+
+# Temporary files
+*.tmp
+*.log
+temp/
+tmp/
